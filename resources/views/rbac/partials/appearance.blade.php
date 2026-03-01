@@ -42,13 +42,13 @@
                             <span>Settings</span>
                         </a>
                         <div class="la-setup-side-group resources">Resources</div>
-                        <a href="https://github.com/imranshah/Aurix" target="_blank" rel="noopener" class="la-setup-link">
+                        <a href="https://github.com/ishah300/Aurix" target="_blank" rel="noopener" class="la-setup-link">
                             <span class="la-setup-link-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none"><path d="M9.5 18.5c-3.8 1.2-3.8-1.7-5.3-2.1m10.6 4.2v-3a2.6 2.6 0 0 0-.8-2c2.7-.3 5.5-1.3 5.5-6a4.7 4.7 0 0 0-1.3-3.3 4.4 4.4 0 0 0-.1-3.3s-1-.3-3.4 1.3a11.5 11.5 0 0 0-6.2 0C6.1 3 5.1 3.3 5.1 3.3a4.4 4.4 0 0 0-.1 3.3 4.7 4.7 0 0 0-1.3 3.3c0 4.7 2.8 5.7 5.5 6a2.6 2.6 0 0 0-.8 2v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </span>
                             <span>Github Repo</span>
                         </a>
-                        <a href="https://github.com/imranshah/Aurix#readme" target="_blank" rel="noopener" class="la-setup-link">
+                        <a href="https://github.com/ishah300/Aurix#readme" target="_blank" rel="noopener" class="la-setup-link">
                             <span class="la-setup-link-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none"><path d="M7 5.5h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.8"/><path d="M9 9h6M9 12h6M9 15h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                             </span>
@@ -82,18 +82,22 @@
                             <div class="la-field">
                                 <label>Logo Mode</label>
                                 <div class="la-btn-row">
-                                    <button type="button" id="logoModeSvg" class="la-btn">Use SVG</button>
-                                    <button type="button" id="logoModeUpload" class="la-btn">Use Image URL</button>
+                                    <button type="button" id="logoModeSvg" class="la-btn">Use SVG Link</button>
+                                    <button type="button" id="logoModeUpload" class="la-btn">Upload Image</button>
                                     <button type="button" id="resetLogoBtn" class="la-btn">Reset Aurix Logo</button>
                                 </div>
                             </div>
                             <div class="la-field" id="logoSvgWrap">
-                                <label for="logoSvg">SVG Code</label>
-                                <textarea id="logoSvg" class="la-textarea" rows="7"></textarea>
+                                <label for="logoSvg">SVG Link (URL)</label>
+                                <input id="logoSvg" type="url" class="la-input" placeholder="https://example.com/logo.svg">
                             </div>
                             <div class="la-field" id="logoUploadWrap" style="display:none;">
-                                <label for="logoImageUrl">Logo Image URL</label>
-                                <input id="logoImageUrl" type="text" class="la-input" placeholder="https://...">
+                                <label for="logoImageFile">Upload Logo Image</label>
+                                <div class="la-btn-row">
+                                    <label class="la-btn" for="logoImageFile">Choose Image</label>
+                                </div>
+                                <input id="logoImageFile" type="file" accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml" class="au-file-input">
+                                <input id="logoImageUrl" type="hidden">
                             </div>
                             <div class="la-field">
                                 <label for="logoHeight">Logo Height (px)</label>
@@ -269,6 +273,7 @@
     const previewRouteSelect = document.getElementById('auPreviewRouteSelect');
     const previewFrame = document.getElementById('auPreviewFrame');
     const previewOpenNewTab = document.getElementById('auPreviewOpenNewTab');
+    const logoImageFile = document.getElementById('logoImageFile');
     const faviconLightPreview = document.getElementById('faviconLightPreview');
     const faviconDarkPreview = document.getElementById('faviconDarkPreview');
     const faviconLightFile = document.getElementById('faviconLightFile');
@@ -407,9 +412,15 @@
         previewBtn.style.borderColor = v.button_color;
         previewBtn.style.color = v.button_text_color;
         if (v.logo_mode === 'svg' && v.logo_svg.trim() !== '') {
-            previewLogo.innerHTML = `<div style="height:${v.logo_height}px; width:${v.logo_height}px;">${v.logo_svg}</div>`;
+            const svgValue = v.logo_svg.trim();
+            const isLegacySvgMarkup = svgValue.startsWith('<svg');
+            previewLogo.innerHTML = isLegacySvgMarkup
+                ? `<div style="height:${v.logo_height}px; width:${v.logo_height}px;">${svgValue}</div>`
+                : `<img src="${svgValue}" alt="logo" style="height:${v.logo_height}px; width:auto;">`;
             if (sidebarLogoPreview) {
-                sidebarLogoPreview.innerHTML = `<div style="height:${Math.max(24, v.logo_height)}px; width:${Math.max(24, v.logo_height)}px;">${v.logo_svg}</div>`;
+                sidebarLogoPreview.innerHTML = isLegacySvgMarkup
+                    ? `<div style="height:${Math.max(24, v.logo_height)}px; width:${Math.max(24, v.logo_height)}px;">${svgValue}</div>`
+                    : `<img src="${svgValue}" alt="logo" style="height:${Math.max(24, v.logo_height)}px; width:auto;">`;
             }
         } else if (v.logo_image_url.trim() !== '') {
             previewLogo.innerHTML = `<img src="${v.logo_image_url}" alt="logo" style="height:${v.logo_height}px; width:auto;">`;
@@ -469,6 +480,24 @@
 
     bindFaviconUpload(faviconLightFile, faviconLightUploadBtn, el.faviconLightUrl);
     bindFaviconUpload(faviconDarkFile, faviconDarkUploadBtn, el.faviconDarkUrl);
+    if (logoImageFile) {
+        logoImageFile.addEventListener('change', () => {
+            const file = logoImageFile.files && logoImageFile.files[0] ? logoImageFile.files[0] : null;
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                el.logoImageUrl.value = String(reader.result || '');
+                setLogoMode('upload');
+                applyPreview();
+                setStatus(`${file.name} loaded as logo image. Click Save changes to persist.`, 'ok');
+            };
+            reader.onerror = () => setStatus('Could not read selected logo image.', 'err');
+            reader.readAsDataURL(file);
+        });
+    }
     backgroundImageFile.addEventListener('change', () => {
         const file = backgroundImageFile.files && backgroundImageFile.files[0] ? backgroundImageFile.files[0] : null;
         if (!file) {

@@ -67,13 +67,13 @@
                             <span>Settings</span>
                         </a>
                         <div class="la-setup-side-group resources">Resources</div>
-                        <a href="https://github.com/imranshah/Aurix" target="_blank" rel="noopener" class="la-setup-link">
+                        <a href="https://github.com/ishah300/Aurix" target="_blank" rel="noopener" class="la-setup-link">
                             <span class="la-setup-link-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none"><path d="M9.5 18.5c-3.8 1.2-3.8-1.7-5.3-2.1m10.6 4.2v-3a2.6 2.6 0 0 0-.8-2c2.7-.3 5.5-1.3 5.5-6a4.7 4.7 0 0 0-1.3-3.3 4.4 4.4 0 0 0-.1-3.3s-1-.3-3.4 1.3a11.5 11.5 0 0 0-6.2 0C6.1 3 5.1 3.3 5.1 3.3a4.4 4.4 0 0 0-.1 3.3 4.7 4.7 0 0 0-1.3 3.3c0 4.7 2.8 5.7 5.5 6a2.6 2.6 0 0 0-.8 2v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </span>
                             <span>Github Repo</span>
                         </a>
-                        <a href="https://github.com/imranshah/Aurix#readme" target="_blank" rel="noopener" class="la-setup-link">
+                        <a href="https://github.com/ishah300/Aurix#readme" target="_blank" rel="noopener" class="la-setup-link">
                             <span class="la-setup-link-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none"><path d="M7 5.5h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.8"/><path d="M9 9h6M9 12h6M9 15h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                             </span>

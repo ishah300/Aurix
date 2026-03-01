@@ -56,7 +56,7 @@ class AppearanceInputSanitizer
         }
 
         if (array_key_exists('logo_svg', $payload)) {
-            $payload['logo_svg'] = self::sanitizeSvg($payload['logo_svg']);
+            $payload['logo_svg'] = self::sanitizeSvgReference($payload['logo_svg']);
         }
 
         return $payload;
@@ -79,13 +79,32 @@ class AppearanceInputSanitizer
         return $trimmed;
     }
 
-    private static function sanitizeSvg(mixed $svg): ?string
+    private static function sanitizeSvgReference(mixed $svg): ?string
     {
         if ($svg === null) {
             return null;
         }
 
         $value = trim((string) $svg);
+        if ($value === '') {
+            return '';
+        }
+
+        if (Str::startsWith(ltrim($value), '<svg')) {
+            return self::sanitizeSvgMarkup($value);
+        }
+
+        if (self::isAllowedSvgUrl($value)) {
+            return $value;
+        }
+
+        throw ValidationException::withMessages([
+            'logo_svg' => __('Please provide a valid SVG URL.'),
+        ]);
+    }
+
+    private static function sanitizeSvgMarkup(string $value): ?string
+    {
         if ($value === '') {
             return '';
         }
@@ -113,6 +132,24 @@ class AppearanceInputSanitizer
         $sanitized = $document->saveXML($root) ?: '';
 
         return trim($sanitized);
+    }
+
+    private static function isAllowedSvgUrl(string $value): bool
+    {
+        if (str_starts_with($value, '/')) {
+            return true;
+        }
+
+        if (str_starts_with($value, 'data:image/svg+xml')) {
+            return true;
+        }
+
+        if (filter_var($value, FILTER_VALIDATE_URL) === false) {
+            return false;
+        }
+
+        $scheme = (string) parse_url($value, PHP_URL_SCHEME);
+        return in_array(strtolower($scheme), ['http', 'https'], true);
     }
 
     private static function enforceSvgSafety(DOMElement $element): void

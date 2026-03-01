@@ -1,9 +1,13 @@
 <x-aurix-favicon-loader />
 <x-aurix-auth-theme-loader />
-<x-guest-layout>
+<x-aurix-auth-layout>
     <div data-aurix-auth-page hidden aria-hidden="true"></div>
 
-    <div class="rounded-xl bg-white p-6 shadow-sm">
+    <div class="rounded-xl bg-white p-6 shadow-sm aurix-auth-card">
+        <div class="mb-4 flex justify-center">
+            <x-aurix-auth-logo :height="56" class="object-contain" />
+        </div>
+
         @if (session('error'))
             <div class="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
                 {{ session('error') }}
@@ -26,7 +30,7 @@
             </div>
         @endif
 
-        <div class="flex justify-end">
+        <div class="flex justify-center">
             <h2 class="text-3xl font-semibold text-gray-800">Sign in</h2>
         </div>
 
@@ -65,6 +69,27 @@
                 @enderror
             </div>
 
+            <div class="mb-4 {{ $showPassword ? '' : 'hidden' }}" id="aurixPasswordMeta">
+                <div class="flex items-center justify-between gap-3">
+                    <label for="remember_me" class="inline-flex items-center gap-2 text-sm text-gray-600">
+                        <input
+                            id="remember_me"
+                            type="checkbox"
+                            name="remember"
+                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            {{ old('remember') ? 'checked' : '' }}
+                        >
+                        <span>Remember me</span>
+                    </label>
+
+                    @if (Route::has('password.request'))
+                        <a class="text-sm text-gray-600 underline hover:text-gray-900" href="{{ route('password.request') }}">
+                            Forgot your password?
+                        </a>
+                    @endif
+                </div>
+            </div>
+
             <div class="mt-4">
                 <button
                     type="submit"
@@ -88,6 +113,7 @@
     (() => {
         const form = document.getElementById('aurixLoginForm');
         const passwordWrap = document.getElementById('aurixPasswordWrap');
+        const passwordMeta = document.getElementById('aurixPasswordMeta');
         const passwordInput = document.getElementById('password');
         const button = document.getElementById('aurixContinueBtn');
 
@@ -104,10 +130,13 @@
 
             event.preventDefault();
             passwordWrap.classList.remove('hidden');
+            if (passwordMeta) {
+                passwordMeta.classList.remove('hidden');
+            }
             passwordInput.setAttribute('required', 'required');
             button.textContent = 'Sign in';
             passwordInput.focus();
         });
     })();
     </script>
-</x-guest-layout>
+</x-aurix-auth-layout>

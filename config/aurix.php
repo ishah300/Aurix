@@ -89,7 +89,7 @@ return [
     'appearance' => [
         'defaults' => [
             'logo_mode' => 'upload',
-            'logo_svg' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 420" role="img" aria-label="Aurix logo"><image href="/vendor/aurix/aurix-logo.png" x="0" y="0" width="560" height="420" preserveAspectRatio="xMidYMid meet" /></svg>',
+            'logo_svg' => '/vendor/aurix/aurix-logo.svg',
             'logo_image_url' => '/vendor/aurix/aurix-logo.png',
             'logo_height' => 56,
             'background_color' => '#f8fafc',
